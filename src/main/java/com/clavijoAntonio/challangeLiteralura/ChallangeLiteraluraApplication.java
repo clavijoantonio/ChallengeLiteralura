@@ -15,6 +15,6 @@ public class ChallangeLiteraluraApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Principal principal = new Principal();
-		principal.obtenerDatosApi();
+		principal.buscarLibrosPorTitulo();
 	}
 }
