@@ -1,4 +1,4 @@
-package service;
+package com.clavijoAntonio.challangeLiteralura.service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 public class ConsumoApi {
 
-    public String obtenerDatos(String url) {
+    public String obtenerJson(String url) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

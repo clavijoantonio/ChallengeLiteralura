@@ -1,4 +1,4 @@
-package model;
+package com.clavijoAntonio.challangeLiteralura.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
