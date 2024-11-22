@@ -13,12 +13,15 @@ public class Libros {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
+    @Column(unique = true)
     private String titulo;
-    //private List<String> subjetos;
-    //private List<DatosPersona> autores;
-    //private List<DatosPersona> traductores;
+    //private List<String> subjectos;
+    @OneToMany(mappedBy = "libro",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Personas> autores;
+   // @OneToMany(mappedBy = "libro",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   // private List<Personas> traductores;
    // private List<String> estanteria;
-   // private List<String> idioma;
+  //  private List<String> idioma;
     private String editorial;
     private int descargas;
 
@@ -30,6 +33,7 @@ public class Libros {
         this.titulo = libros.titulo();
         this.editorial = libros.editorial();
         this.descargas = libros.descargas();
+
     }
 
     public void setId(Long id) {
@@ -68,13 +72,27 @@ public class Libros {
         this.editorial = editorial;
     }
 
+    public List<Personas> getAutores() {
+        return autores;
+    }
+
+
+
+    public void setAutores(List<Personas> autores) {
+        autores.forEach(a-> a.setLibro(this));
+        this.autores = autores;
+    }
+
     @Override
     public String toString() {
-        return "Libros{" +
+        return
                 "id=" + id +
                 ", titulo='" + titulo + '\'' +
+                ", autores=" + autores +
                 ", editorial='" + editorial + '\'' +
-                ", descargas=" + descargas +
-                '}';
+                ", descargas=" + descargas;
+
     }
+
+
 }
