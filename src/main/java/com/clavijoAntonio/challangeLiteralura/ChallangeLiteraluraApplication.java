@@ -1,6 +1,7 @@
 package com.clavijoAntonio.challangeLiteralura;
 
 import com.clavijoAntonio.challangeLiteralura.repository.IAuthorRepository;
+import com.clavijoAntonio.challangeLiteralura.service.LibrosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +16,7 @@ public class ChallangeLiteraluraApplication implements CommandLineRunner {
     @Autowired
 	ILibroRepository repository;
 	@Autowired
-	IAuthorRepository autorRepository;
+	LibrosService librosService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ChallangeLiteraluraApplication.class, args);
@@ -23,7 +24,7 @@ public class ChallangeLiteraluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Principal principal = new Principal(repository,autorRepository);
+		Principal principal = new Principal(repository,librosService);
 		principal.menu();
 	}
 }

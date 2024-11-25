@@ -18,10 +18,8 @@ public class Libros {
     //private List<String> subjectos;
     @OneToMany(mappedBy = "libro",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Personas> autores;
-   // @OneToMany(mappedBy = "libro",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-   // private List<Personas> traductores;
-   // private List<String> estanteria;
-  //  private List<String> idioma;
+    @Enumerated(EnumType.STRING)
+    private Idiomas idioma;
     private String editorial;
     private int descargas;
 
@@ -33,6 +31,7 @@ public class Libros {
         this.titulo = libros.titulo();
         this.editorial = libros.editorial();
         this.descargas = libros.descargas();
+        this.idioma=Idiomas.fromString(libros.idioma());
 
     }
 
@@ -75,12 +74,17 @@ public class Libros {
     public List<Personas> getAutores() {
         return autores;
     }
-
-
-
     public void setAutores(List<Personas> autores) {
         autores.forEach(a-> a.setLibro(this));
         this.autores = autores;
+    }
+
+    public Idiomas getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(Idiomas idioma) {
+        this.idioma = idioma;
     }
 
     @Override

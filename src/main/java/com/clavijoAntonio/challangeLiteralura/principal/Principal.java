@@ -2,6 +2,7 @@ package com.clavijoAntonio.challangeLiteralura.principal;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.clavijoAntonio.challangeLiteralura.model.*;
 
@@ -9,6 +10,7 @@ import com.clavijoAntonio.challangeLiteralura.repository.IAuthorRepository;
 import com.clavijoAntonio.challangeLiteralura.repository.ILibroRepository;
 import com.clavijoAntonio.challangeLiteralura.service.ConsumoApi;
 import com.clavijoAntonio.challangeLiteralura.service.ConvierteDatos;
+import com.clavijoAntonio.challangeLiteralura.service.LibrosService;
 
 public class Principal {
     private Scanner teclado = new Scanner(System.in);
@@ -19,11 +21,11 @@ public class Principal {
     private ILibroRepository repository;
     private IAuthorRepository autorRepository;
     private List<Libros> libroRegistrado;
-
-    public Principal(ILibroRepository repository, IAuthorRepository autorRepository){
+    private LibrosService librosService;
+    public Principal(ILibroRepository repository, LibrosService librosService){
 
         this.repository=repository;
-        this.autorRepository=autorRepository;
+        this.librosService=librosService;
     }
 
     public void menu(){
@@ -52,16 +54,17 @@ public class Principal {
                         case 3:
                             listarAutoresRegistados();
                         break;
+                case 4:
+                    listarIdioma();
+                    break;
             }
         }
     }
-    public DatoApi getLibrosPorTitulo() {
+    public List<DatoApi>  getLibrosPorTitulo() {
 
         System.out.println("Ingresa el libro que desea buscar: ");
         String titulo = teclado.nextLine();
-        var json = consumoApi.obtenerJson(URL_BASE+titulo.replace(" ","+"));
-        DatoApi datos= conversor.obtenerDatos(json, DatoApi.class);
-        //System.out.println(json);
+        List <DatoApi> datos= convierteJsonADatos(titulo);
         return datos;
 
     }
@@ -70,13 +73,14 @@ public void buscarLibrosPorTitulo() {
 
     DatosLibros li = null;
 
-    List <DatoApi>api = new ArrayList<>();
-    api.add(getLibrosPorTitulo());
+    List <DatoApi> api = getLibrosPorTitulo();
 
+    api.forEach(System.out::println);
     Optional<DatoApi> lib= api.stream()
             .findFirst();
 
     if (lib.isPresent()) {
+      var libros= lib.get();
 
         dlibro = api.stream()
                 .flatMap(a -> a.results().stream())
@@ -88,6 +92,7 @@ public void buscarLibrosPorTitulo() {
                 .collect(Collectors.toList());
 
     }
+
     for (DatosLibros libros : dlibro) {
         li = libros;
         System.out.println(libros);
@@ -106,7 +111,7 @@ public void buscarLibrosPorTitulo() {
   }
 public void listarAutoresRegistados(){
     registarAuthores();
-    List<Personas> autor = new ArrayList<>();
+    List<Personas> autor;
     autor = autorRepository.findAll();
     autor.forEach(System.out::println);
 }
@@ -121,10 +126,7 @@ public void listarAutoresRegistados(){
            .findFirst();
       if (libroEncontrado.isPresent()){
           var libro= libroEncontrado.get();
-          var json = consumoApi.obtenerJson(URL_BASE+titulo.replace(" ","+"));
-          DatoApi datos= conversor.obtenerDatos(json, DatoApi.class);
-          List<DatoApi> datosApi= new ArrayList<>();
-          datosApi.add(datos);
+         List <DatoApi> datosApi= convierteJsonADatos(titulo);
 
           dlibro = datosApi.stream()
                   .flatMap(a -> a.results().stream())
@@ -143,10 +145,24 @@ public void listarAutoresRegistados(){
       }else{
           System.out.println("libro no encontrado");
       }
-
-
-
   }
+public void listarIdioma(){
+    DatosLibros li = null;
+    System.out.println("Ingresa el idioma para conecer los libros en este lenguaje: ");
+     var idioma = teclado.nextLine();
+     var listaLibros= librosService.findLibroByIdioma(idioma);
 
+    listaLibros.forEach(System.out::println);
+
+}
+    public List<DatoApi> convierteJsonADatos(String tituloLibros){
+
+        var json = consumoApi.obtenerJson(URL_BASE+tituloLibros.replace(" ","+"));
+        DatoApi datos= conversor.obtenerDatos(json, DatoApi.class);
+        List<DatoApi> datosApi= new ArrayList<>();
+        datosApi.add(datos);
+        datosApi.forEach(System.out::println);
+        return datosApi;
+    }
 
 }
