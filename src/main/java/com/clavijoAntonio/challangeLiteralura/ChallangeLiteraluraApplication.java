@@ -17,6 +17,8 @@ public class ChallangeLiteraluraApplication implements CommandLineRunner {
 	ILibroRepository repository;
 	@Autowired
 	LibrosService librosService;
+	@Autowired
+	IAuthorRepository authorRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ChallangeLiteraluraApplication.class, args);
@@ -24,7 +26,7 @@ public class ChallangeLiteraluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Principal principal = new Principal(repository,librosService);
+		Principal principal = new Principal(repository,librosService,authorRepository);
 		principal.menu();
 	}
 }

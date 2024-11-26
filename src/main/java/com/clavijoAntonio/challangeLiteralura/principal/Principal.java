@@ -15,17 +15,18 @@ import com.clavijoAntonio.challangeLiteralura.service.LibrosService;
 public class Principal {
     private Scanner teclado = new Scanner(System.in);
     private ConsumoApi consumoApi= new ConsumoApi();
-    private final String URL_BASE="https://gutendex.com/books/?search=dickens%20";
+    private final String URL_BASE="https://gutendex.com/books/?search=";
     private ConvierteDatos conversor = new ConvierteDatos();
     private List<DatosLibros> dlibro;
     private ILibroRepository repository;
     private IAuthorRepository autorRepository;
     private List<Libros> libroRegistrado;
     private LibrosService librosService;
-    public Principal(ILibroRepository repository, LibrosService librosService){
+    public Principal(ILibroRepository repository, LibrosService librosService, IAuthorRepository  autorRepository){
 
         this.repository=repository;
         this.librosService=librosService;
+        this.autorRepository= autorRepository;
     }
 
     public void menu(){
@@ -55,7 +56,13 @@ public class Principal {
                             listarAutoresRegistados();
                         break;
                 case 4:
+                    listarAutorPorAño();
+                    break;
+                case 5:
                     listarIdioma();
+                    break;
+                default:
+                    System.out.println("Opcion no valida");
                     break;
             }
         }
@@ -146,15 +153,27 @@ public void listarAutoresRegistados(){
           System.out.println("libro no encontrado");
       }
   }
-public void listarIdioma(){
-    DatosLibros li = null;
+public void listarIdioma() {
+
     System.out.println("Ingresa el idioma para conecer los libros en este lenguaje: ");
-     var idioma = teclado.nextLine();
-     var listaLibros= librosService.findLibroByIdioma(idioma);
-
-    listaLibros.forEach(System.out::println);
-
+    var idioma = teclado.nextLine();
+    List<Libros> listaLibros = librosService.findLibroByIdioma(idioma);
+    if(listaLibros.isEmpty()) {
+        System.out.println("no se encuentra libros para este idioma");
+    }else{
+        listaLibros.forEach(System.out::println);
+    }
 }
+   public void listarAutorPorAño(){
+       System.out.println("Ingresa Año para cual desea concer los autores vivos para esta epoca: ");
+       var año = teclado.nextLine();
+       List<Personas> autores = autorRepository.findAllbyAño(año);
+       if(autores.isEmpty()){
+           System.out.println("No hay autores vivos para este Año especifico");
+       }else {
+           autores.forEach(System.out::println);
+       }
+   }
     public List<DatoApi> convierteJsonADatos(String tituloLibros){
 
         var json = consumoApi.obtenerJson(URL_BASE+tituloLibros.replace(" ","+"));
