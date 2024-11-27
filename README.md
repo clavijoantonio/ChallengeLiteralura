@@ -36,7 +36,7 @@
     <p>Sigue estos pasos para clonar el repositorio, construir y ejecutar la aplicación:</p>
     <h3>Clonar el Repositorio</h3>
     <pre><code>
-        git clone https://github.com/tu-usuario/alura-challenge.git
+        git clone https://github.com/clavijoantonio/ChallengeLiteralura.git
         cd alura-challenge
     </code></pre>
     <h3>Configurar la Base de Datos</h3>
